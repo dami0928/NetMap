@@ -23,8 +23,7 @@ A powerful network scanner designed to perform advanced network discovery and sc
   - FIN Scan
   - NULL Scan
 
-- **IDS Evasion**:
-  - Randomized packet generation
+- **IDS Evasion**: 
   - Fragmentation of packets
   - Slow scanning techniques to avoid detection
 
@@ -37,7 +36,7 @@ A powerful network scanner designed to perform advanced network discovery and sc
 To install the network scanner, clone this repository and install the required dependencies:
 
 ```bash
-git clone https://github.com/yourusername/network-scanner.git
+git clone https://github.com/dami0928/NetMap.git
 cd network-scanner
 pip install -r requirements.txt
 ```
