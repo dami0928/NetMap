@@ -1,5 +1,5 @@
 <div style="text-align:center;">
-  <img src="./maxresdefault.jpg" alt="Banner" style="width:100%; height:auto;" />
+  <img src="./banner.jpg" alt="Banner" style="width:100%; height:auto;" />
 </div>
 
 # Network Scanner
