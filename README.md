@@ -37,6 +37,6 @@ To install the network scanner, clone this repository and install the required d
 
 ```bash
 git clone https://github.com/dami0928/NetMap.git
-cd network-scanner
+cd NetMap
 pip install -r requirements.txt
 ```
