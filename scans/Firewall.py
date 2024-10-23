@@ -15,7 +15,7 @@ class Firewall:
     def xmas(self):
         pkt = IP(dst=self.target)/TCP(dport=self.port,flags='FPU')
         ans = sr1(pkt,verbose=False,timeout=self.timeout)
-        if(str(type(ans))==None):
+        if(ans == None):
             return True
         elif(ans.haslayer(TCP)):
             if(ans.getlayer(TCP).flags == 0x14):
@@ -29,7 +29,7 @@ class Firewall:
     def fin(self):
         pkt = IP(dst=self.target)/TCP(dport=self.port,flags='F')
         ans = sr1(pkt,verbose=False,timeout=self.timeout)
-        if(str(type(ans))==None):
+        if(ans == None):
             return True
         elif(ans.haslayer(TCP)):
             if(ans.getlayer(TCP).flags == 0x14):
@@ -43,7 +43,7 @@ class Firewall:
     def null(self):
         pkt = IP(dst=self.target)/TCP(dport=self.port,flags='')
         ans = sr1(pkt,verbose=False,timeout=self.timeout)
-        if(str(type(ans))==None):
+        if(ans == None):
             return True
         elif(ans.haslayer(TCP)):
             if(ans.getlayer(TCP).flags == 0x14):
@@ -57,7 +57,7 @@ class Firewall:
     def tcp_ack(self):
         pkt = IP(dst=self.target)/TCP(dport=self.port,flags='A')
         ans = sr1(pkt,verbose=False,timeout=self.timeout)
-        if(str(type(ans))==None):
+        if(ans == None):
             return True
         elif(ans.haslayer(TCP)):
             if(ans.getlayer(TCP).flags == 0x4):

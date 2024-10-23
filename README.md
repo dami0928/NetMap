@@ -1,5 +1,5 @@
 <div style="text-align:center;">
-  <img src="./banner.jpg" alt="Banner" style="width:100%; height:auto;" />
+  <img src="./assets/banner.jpg" alt="Banner" style="width:100%; height:auto;" />
 </div>
 
 # Network Scanner
@@ -7,7 +7,7 @@
 **Author:** Damiano Gubiani  
 **Version:** 1.0 
 
-A powerful network scanner designed to perform advanced network discovery and scanning techniques while incorporating features for IDS evasion and firewall detection.
+A high-quality port scanner developed in Python using the Scapy library, designed for comprehensive network reconnaissance and security assessments.
 
 ## Features
 
@@ -30,6 +30,10 @@ A powerful network scanner designed to perform advanced network discovery and sc
 - **Firewall Detection**:
   - Analyze response behavior to identify firewall configurations
   - Support for OS fingerprinting to determine device types behind firewalls
+
+## purpose
+
+Designed for **ethical hacking** and **network assessment**, this tool enhances security testing capabilities while maintaining a **low profile** in monitored environments.
 
 ## Installation
 

@@ -1,6 +1,8 @@
 import logging
 logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 from scapy.all import *
+from scapy.layers.dns import DNS, DNSQR, DNSRR
+import threading
 
 
 class scans:
@@ -17,7 +19,7 @@ class scans:
     def tcp_conn(self):
         pkt = IP(dst=self.target)/TCP(sport=self.sport,dport=self.port,flags='S')
         ans = sr1(pkt,verbose=False,timeout=self.timeout)
-        if(str(type(ans))==None):
+        if(ans == None):
             return False
         elif(ans.haslayer(TCP)):
             if(ans.getlayer(TCP).flags == 0x12):
@@ -33,7 +35,7 @@ class scans:
     def tcp_stealth(self):
         pkt = IP(dst=self.target)/TCP(sport=self.sport,dport=self.port,flags='S')
         ans = sr1(pkt,verbose=False,timeout=self.timeout)
-        if(str(type(ans))==None):
+        if(ans == None):
             return False
         elif(ans.haslayer(TCP)):
             if(ans.getlayer(TCP).flags == 0x12):
@@ -51,7 +53,7 @@ class scans:
     def tcp_window(self):
         pkt = IP(dst=self.target)/TCP(sport=self.sport,dport=self.port,flags='A')
         ans = sr1(pkt,verbose=False,timeout=self.timeout)
-        if(str(type(ans))==None):
+        if(ans == None):
             return False
         elif(ans.haslayer(TCP)):
             if(ans.getlayer(TCP).window > 0):
@@ -79,7 +81,7 @@ class scans:
             return False
         
         # Attempt to scan port
-        probe_pkt = IP(dst=ftp_server)/TCP(dport=self.por,flags='S')
+        probe_pkt = IP(dst=ftp_server)/TCP(dport=self.port,flags='S')
         response = sr1(probe_pkt, timeout=self.timeout, verbose=0)
         
         if response is None:
@@ -90,12 +92,13 @@ class scans:
             return False
         
 
+
     def resolve_hostname(hostname, dns_server="8.8.8.8"):
         # Build the DNS request packet
         dns_query = IP(dst=dns_server)/UDP(dport=53)/DNS(rd=1,qd=DNSQR(qname=hostname))
         
         # Send the DNS query and wait for a response
-        response = sr1(dns_query, verbose=0, timeout=2)
+        response = sr1(dns_query, verbose=0, timeout=5)
         
         if response and response.haslayer(DNS) and response[DNS].ancount > 0:
             # Extract the IP address from the response
@@ -107,4 +110,45 @@ class scans:
             return False
         return None
 
-    
+
+
+    def reverse_dns_lookup(hostname,dns_server="8.8.8.8"):
+        try:
+            # Convert the IP to reverse DNS format (e.g., 1.1.1.1 -> 1.1.1.1.in-addr.arpa)
+            reverse_ip = '.'.join(reversed(hostname.split('.'))) + ".in-addr.arpa"
+            
+            # Create a DNS query packet
+            dns_query = IP(dst=dns_server) / UDP(dport=53) / DNS(rd=1, qd=DNSQR(qname=reverse_ip, qtype="PTR"))
+            
+            # Send the DNS query and get the response
+            response = sr1(dns_query, verbose=0, timeout=2)
+            
+            # Check if we got a valid response with an answer
+            if response and response.haslayer(DNS) and response[DNS].ancount > 0:
+                # Extract the domain name from the DNS response
+                domain_name = response[DNS].an.rdata.decode()  # Extract the PTR record
+                return domain_name
+            else:
+                return False
+
+        except Exception as e:
+            return e
+
+
+
+def packet_trace(target):
+    def packet_callback(packet):
+        # Check if the packet is related to the target IP
+        if IP in packet:
+            print(f'{packet.summary()}')  # Show details of the captured packet
+        
+    def pkt_sniff():
+        # Start sniffing packets
+        sniff(prn=packet_callback, filter=f"host {target}")
+                    
+    sniff_thread = threading.Thread(target=pkt_sniff)
+    sniff_thread.daemon = True
+    sniff_thread.start()
+        
+        
+  
